@@ -1,0 +1,11 @@
+﻿<Project>
+  <PropertyGroup>
+    <!-- Bevorzuge ANDROID_SDK_ROOT, wenn gesetzt -->
+    <AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)'=='' and '$(ANDROID_SDK_ROOT)' != ''">$(ANDROID_SDK_ROOT)</AndroidSdkDirectory>
+    <!-- Fallback: ANDROID_HOME -->
+    <AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)'=='' and '$(ANDROID_HOME)' != ''">$(ANDROID_HOME)</AndroidSdkDirectory>
+    <!-- Fallback: Standardpfad unter Windows -->
+    <AndroidSdkDirectory Condition="'$(AndroidSdkDirectory)'=='' and Exists('$(USERPROFILE)\AppData\Local\Android\Sdk')">$(USERPROFILE)\AppData\Local\Android\Sdk</AndroidSdkDirectory>
+  </PropertyGroup>
+</Project>
+

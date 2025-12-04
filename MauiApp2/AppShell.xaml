@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauiApp2.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:MauiApp2.Pages"
+    Title="MauiApp2">
+
+    <TabBar>
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate pages:HomePage}"
+            Route="MainPage" />
+        
+        <ShellContent
+            Title="Liked"
+            ContentTemplate="{DataTemplate pages:LikedSongsPage}"
+            Route="LikedSongsPage" />
+        
+        <ShellContent
+            Title="Stats"
+            ContentTemplate="{DataTemplate pages:StatsPage}"
+            Route="StatsPage" />
+        
+        <ShellContent
+            Title="Account"
+            ContentTemplate="{DataTemplate pages:AccountPage}"
+            Route="AccountPage" />
+    </TabBar>
+
+</Shell>
