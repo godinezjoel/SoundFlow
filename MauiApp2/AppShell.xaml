@@ -4,28 +4,15 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:MauiApp2.Pages"
+    Shell.TabBarIsVisible="False"
+    Shell.NavBarIsVisible="False"
+    Shell.FlyoutBehavior="Disabled"
     Title="MauiApp2">
 
-    <TabBar>
-        <ShellContent
-            Title="Home"
-            ContentTemplate="{DataTemplate pages:HomePage}"
-            Route="MainPage" />
-        
-        <ShellContent
-            Title="Liked"
-            ContentTemplate="{DataTemplate pages:LikedSongsPage}"
-            Route="LikedSongsPage" />
-        
-        <ShellContent
-            Title="Stats"
-            ContentTemplate="{DataTemplate pages:StatsPage}"
-            Route="StatsPage" />
-        
-        <ShellContent
-            Title="Account"
-            ContentTemplate="{DataTemplate pages:AccountPage}"
-            Route="AccountPage" />
-    </TabBar>
+    <!-- Routes für Navigation (ohne sichtbare TabBar) -->
+    <ShellContent Route="HomePage" ContentTemplate="{DataTemplate pages:HomePage}" />
+    <ShellContent Route="LikedSongsPage" ContentTemplate="{DataTemplate pages:LikedSongsPage}" />
+    <ShellContent Route="StatsPage" ContentTemplate="{DataTemplate pages:StatsPage}" />
+    <ShellContent Route="AccountPage" ContentTemplate="{DataTemplate pages:AccountPage}" />
 
 </Shell>
