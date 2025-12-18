@@ -21,7 +21,7 @@
         <Nullable>enable</Nullable>
 
         <!-- Display name -->
-        <ApplicationTitle>MauiApp2</ApplicationTitle>
+        <ApplicationTitle>SoundFlow</ApplicationTitle>
 
         <!-- App Identifier -->
         <ApplicationId>com.companyname.mauiapp2</ApplicationId>

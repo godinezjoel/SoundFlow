@@ -14,58 +14,91 @@
             
             <!-- Home Button -->
             <VerticalStackLayout Spacing="4">
-                <Button x:Name="HomeBtn"
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"/>
-                </svg>
-
-                        FontSize="24"
+                <Border x:Name="HomeBtn"
                         BackgroundColor="Transparent"
-                        Clicked="OnHomeClicked"
                         WidthRequest="50"
-                        HeightRequest="50" />
+                        HeightRequest="50"
+                        StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeClicked" />
+                    </Border.GestureRecognizers>
+                    <Path x:Name="HomeIcon"
+                          Data="M4 12 L12 4 L20 12 M6 10.5 V19 A1 1 0 0 0 7 20 H10 V17 A1 1 0 0 1 11 16 H13 A1 1 0 0 1 14 17 V20 H17 A1 1 0 0 0 18 19 V10.5"
+                          Stroke="White"
+                          StrokeThickness="2"
+                          StrokeLineCap="Round"
+                          StrokeLineJoin="Round"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="24"
+                          HeightRequest="24" />
+                </Border>
             </VerticalStackLayout>
             
             <!-- Liked Button -->
             <VerticalStackLayout Spacing="4">
-                <Button x:Name="LikedBtn"
-                        T<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"/>
-                </svg>
-
-                        FontSize="24"
+                <Border x:Name="LikedBtn"
                         BackgroundColor="Transparent"
-                        Clicked="OnLikedClicked"
                         WidthRequest="50"
-                        HeightRequest="50" />
+                        HeightRequest="50"
+                        StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLikedClicked" />
+                    </Border.GestureRecognizers>
+                    <Path x:Name="LikedIcon"
+                          Data="M12.01 6.001 C6.5 1 1 8 5.782 13.001 L12.011 20 L18.241 13.001 C23 8 17.5 1 12.01 6.002 Z"
+                          Stroke="White"
+                          StrokeThickness="2"
+                          StrokeLineCap="Round"
+                          StrokeLineJoin="Round"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="24"
+                          HeightRequest="24" />
+                </Border>
             </VerticalStackLayout>
             
             <!-- Stats Button -->
             <VerticalStackLayout Spacing="4">
-                <Button x:Name="StatsBtn"
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 15.5V5s3 1 3 4m-7-3H4m9 4H4m4 4H4m13 2.4c0 1.326-1.343 2.4-3 2.4s-3-1.075-3-2.4 1.343-2.4 3-2.4 3 1.075 3 2.4Z"/>
-                </svg>
-
-                        FontSize="24"
+                <Border x:Name="StatsBtn"
                         BackgroundColor="Transparent"
-                        Clicked="OnStatsClicked"
                         WidthRequest="50"
-                        HeightRequest="50" />
+                        HeightRequest="50"
+                        StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStatsClicked" />
+                    </Border.GestureRecognizers>
+                    <Path x:Name="StatsIcon"
+                          Data="M17 15.5 V5 C17 5 20 6 20 9 M10 6 H4 M13 10 H4 M8 14 H4 M17 16.4 C17 17.726 15.657 18.8 14 18.8 C12.343 18.8 11 17.726 11 16.4 C11 15.074 12.343 14 14 14 C15.657 14 17 15.074 17 16.4 Z"
+                          Stroke="White"
+                          StrokeThickness="2"
+                          StrokeLineCap="Round"
+                          StrokeLineJoin="Round"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="24"
+                          HeightRequest="24" />
+                </Border>
             </VerticalStackLayout>
             
             <!-- Account Button -->
             <VerticalStackLayout Spacing="4">
-                <Button x:Name="AccountBtn"
-                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
-                    <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
-                </svg>
-
-                        FontSize="24"
+                <Border x:Name="AccountBtn"
                         BackgroundColor="Transparent"
-                        Clicked="OnAccountClicked"
                         WidthRequest="50"
-                        HeightRequest="50" />
+                        HeightRequest="50"
+                        StrokeThickness="0">
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAccountClicked" />
+                    </Border.GestureRecognizers>
+                    <Path x:Name="AccountIcon"
+                          Data="M12 4 A4 4 0 1 0 12 12 A4 4 0 0 0 12 4 Z M10 13 A4 4 0 0 0 6 17 V18 A2 2 0 0 0 8 20 H16 A2 2 0 0 0 18 18 V17 A4 4 0 0 0 14 13 H10 Z"
+                          Fill="White"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="24"
+                          HeightRequest="24" />
+                </Border>
             </VerticalStackLayout>
             
         </HorizontalStackLayout>

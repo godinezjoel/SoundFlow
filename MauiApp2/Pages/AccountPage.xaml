@@ -15,7 +15,7 @@
                VerticalOptions="Center"
                HorizontalOptions="Center" />
         
-        <components:CustomTabBar Grid.Row="1" />
+        <components:CustomTabBar Grid.Row="1" CurrentPage="AccountPage" />
         
     </Grid>
 

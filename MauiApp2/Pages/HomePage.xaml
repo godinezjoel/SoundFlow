@@ -17,7 +17,7 @@
                HorizontalOptions="Center" />
         
         <!-- Custom TabBar am unteren Rand -->
-        <components:CustomTabBar Grid.Row="1" />
+        <components:CustomTabBar Grid.Row="1" CurrentPage="HomePage" />
         
     </Grid>
 
