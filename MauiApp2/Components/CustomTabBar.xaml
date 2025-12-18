@@ -15,61 +15,57 @@
             <!-- Home Button -->
             <VerticalStackLayout Spacing="4">
                 <Button x:Name="HomeBtn"
-                        Text="🏠"
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m4 12 8-8 8 8M6 10.5V19a1 1 0 0 0 1 1h3v-3a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3h3a1 1 0 0 0 1-1v-8.5"/>
+                </svg>
+
                         FontSize="24"
                         BackgroundColor="Transparent"
                         Clicked="OnHomeClicked"
                         WidthRequest="50"
                         HeightRequest="50" />
-                <Label Text="Home" 
-                       FontSize="10" 
-                       HorizontalOptions="Center"
-                       TextColor="{StaticResource Grey}" />
             </VerticalStackLayout>
             
             <!-- Liked Button -->
             <VerticalStackLayout Spacing="4">
                 <Button x:Name="LikedBtn"
-                        Text="❤️"
+                        T<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12.01 6.001C6.5 1 1 8 5.782 13.001L12.011 20l6.23-7C23 8 17.5 1 12.01 6.002Z"/>
+                </svg>
+
                         FontSize="24"
                         BackgroundColor="Transparent"
                         Clicked="OnLikedClicked"
                         WidthRequest="50"
                         HeightRequest="50" />
-                <Label Text="Liked" 
-                       FontSize="10" 
-                       HorizontalOptions="Center"
-                       TextColor="{StaticResource Grey}" />
             </VerticalStackLayout>
             
             <!-- Stats Button -->
             <VerticalStackLayout Spacing="4">
                 <Button x:Name="StatsBtn"
-                        Text="📊"
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 15.5V5s3 1 3 4m-7-3H4m9 4H4m4 4H4m13 2.4c0 1.326-1.343 2.4-3 2.4s-3-1.075-3-2.4 1.343-2.4 3-2.4 3 1.075 3 2.4Z"/>
+                </svg>
+
                         FontSize="24"
                         BackgroundColor="Transparent"
                         Clicked="OnStatsClicked"
                         WidthRequest="50"
                         HeightRequest="50" />
-                <Label Text="Stats" 
-                       FontSize="10" 
-                       HorizontalOptions="Center"
-                       TextColor="{StaticResource Grey}" />
             </VerticalStackLayout>
             
             <!-- Account Button -->
             <VerticalStackLayout Spacing="4">
                 <Button x:Name="AccountBtn"
-                        Text="👤"
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M12 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4h-4Z" clip-rule="evenodd"/>
+                </svg>
+
                         FontSize="24"
                         BackgroundColor="Transparent"
                         Clicked="OnAccountClicked"
                         WidthRequest="50"
                         HeightRequest="50" />
-                <Label Text="Account" 
-                       FontSize="10" 
-                       HorizontalOptions="Center"
-                       TextColor="{StaticResource Grey}" />
             </VerticalStackLayout>
             
         </HorizontalStackLayout>
