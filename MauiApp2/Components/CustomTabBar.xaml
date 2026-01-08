@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiApp2.Components.CustomTabBar">
@@ -10,14 +10,14 @@
             <RoundRectangle CornerRadius="20,20,0,0" />
         </Border.StrokeShape>
         
-        <HorizontalStackLayout HorizontalOptions="Center" Spacing="30">
+        <HorizontalStackLayout HorizontalOptions="Center" Spacing="25">
             
             <!-- Home Button -->
-            <VerticalStackLayout Spacing="4">
+            <VerticalStackLayout Spacing="2">
                 <Border x:Name="HomeBtn"
                         BackgroundColor="Transparent"
                         WidthRequest="50"
-                        HeightRequest="50"
+                        HeightRequest="40"
                         StrokeThickness="0">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnHomeClicked" />
@@ -33,14 +33,24 @@
                           WidthRequest="24"
                           HeightRequest="24" />
                 </Border>
+                <Label x:Name="HomeLabel" 
+                       Text="Home" 
+                       TextColor="White" 
+                       FontSize="11" 
+                       FontFamily="Roboto-Medium"
+                       HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnHomeClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
             </VerticalStackLayout>
             
             <!-- Liked Button -->
-            <VerticalStackLayout Spacing="4">
+            <VerticalStackLayout Spacing="2">
                 <Border x:Name="LikedBtn"
                         BackgroundColor="Transparent"
                         WidthRequest="50"
-                        HeightRequest="50"
+                        HeightRequest="40"
                         StrokeThickness="0">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnLikedClicked" />
@@ -56,14 +66,24 @@
                           WidthRequest="24"
                           HeightRequest="24" />
                 </Border>
+                <Label x:Name="LikedLabel" 
+                       Text="Liked" 
+                       TextColor="White" 
+                       FontSize="11" 
+                       FontFamily="Roboto-Medium"
+                       HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnLikedClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
             </VerticalStackLayout>
             
             <!-- Stats Button -->
-            <VerticalStackLayout Spacing="4">
+            <VerticalStackLayout Spacing="2">
                 <Border x:Name="StatsBtn"
                         BackgroundColor="Transparent"
                         WidthRequest="50"
-                        HeightRequest="50"
+                        HeightRequest="40"
                         StrokeThickness="0">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnStatsClicked" />
@@ -79,29 +99,68 @@
                           WidthRequest="24"
                           HeightRequest="24" />
                 </Border>
+                <Label x:Name="StatsLabel" 
+                       Text="Stats" 
+                       TextColor="White" 
+                       FontSize="11" 
+                       FontFamily="Roboto-Medium"
+                       HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnStatsClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
             </VerticalStackLayout>
             
             <!-- Account Button -->
-            <VerticalStackLayout Spacing="4">
+            <VerticalStackLayout Spacing="2">
                 <Border x:Name="AccountBtn"
                         BackgroundColor="Transparent"
                         WidthRequest="50"
-                        HeightRequest="50"
+                        HeightRequest="40"
                         StrokeThickness="0">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Tapped="OnAccountClicked" />
                     </Border.GestureRecognizers>
-                    <Path x:Name="AccountIcon"
-                          Data="M12 4 A4 4 0 1 0 12 12 A4 4 0 0 0 12 4 Z M10 13 A4 4 0 0 0 6 17 V18 A2 2 0 0 0 8 20 H16 A2 2 0 0 0 18 18 V17 A4 4 0 0 0 14 13 H10 Z"
-                          Fill="White"
-                          HorizontalOptions="Center"
-                          VerticalOptions="Center"
-                          WidthRequest="24"
-                          HeightRequest="24" />
+                    <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                        <!-- Profile Image Border (circular) -->
+                        <Border x:Name="ProfileImageBorder"
+                                BackgroundColor="#2A7FE6"
+                                WidthRequest="28"
+                                HeightRequest="28"
+                                StrokeThickness="2"
+                                Stroke="White"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="14"/>
+                            </Border.StrokeShape>
+                            <Grid>
+                                <!-- Custom Image -->
+                                <Image x:Name="ProfileCustomImage"
+                                       WidthRequest="28"
+                                       HeightRequest="28"
+                                       Aspect="AspectFill"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="False"/>
+                            </Grid>
+                        </Border>
+                    </Grid>
                 </Border>
+                <Label x:Name="AccountLabel" 
+                       Text="Profile" 
+                       TextColor="White" 
+                       FontSize="11" 
+                       FontFamily="Roboto-Medium"
+                       HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnAccountClicked" />
+                    </Label.GestureRecognizers>
+                </Label>
             </VerticalStackLayout>
             
         </HorizontalStackLayout>
     </Border>
     
 </ContentView>
+

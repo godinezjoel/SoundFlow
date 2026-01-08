@@ -5,17 +5,136 @@
              x:Class="MauiApp2.Pages.StatsPage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto">
         
+        <!-- Header -->
         <Label Grid.Row="0"
-               Text="Stats Page"
-               FontFamily="RobotoMedium"
-               FontSize="32"
+               Text="Your Stats"
+               FontFamily="RobotoBold"
+               FontSize="28"
                TextColor="{StaticResource White}"
-               VerticalOptions="Center"
-               HorizontalOptions="Center" />
+               Padding="20,20,20,10"/>
         
-        <components:CustomTabBar Grid.Row="1" CurrentPage="StatsPage" />
+        <!-- Stats Content -->
+        <ScrollView Grid.Row="1" Padding="20,10">
+            <VerticalStackLayout Spacing="20">
+                
+                <!-- Stats Cards Row -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                    
+                    <!-- Listening Time Card -->
+                    <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource Primary}"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="15"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <!-- Clock Icon -->
+                            <Border BackgroundColor="Transparent"
+                                    StrokeThickness="2"
+                                    Stroke="{StaticResource Primary}"
+                                    WidthRequest="40"
+                                    HeightRequest="40"
+                                    HorizontalOptions="Start">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="20"/>
+                                </Border.StrokeShape>
+                                <Grid>
+                                    <Ellipse WidthRequest="36" HeightRequest="36" 
+                                             Stroke="{StaticResource Primary}" StrokeThickness="2"/>
+                                    <Path Data="M12 6 V12 L16 14"
+                                          Stroke="{StaticResource Primary}"
+                                          StrokeThickness="2"
+                                          StrokeLineCap="Round"
+                                          StrokeLineJoin="Round"
+                                          HorizontalOptions="Center"
+                                          VerticalOptions="Center"
+                                          WidthRequest="20"
+                                          HeightRequest="20"/>
+                                </Grid>
+                            </Border>
+                            <Label x:Name="ListeningTimeLabel"
+                                   Text="0h 0 min"
+                                   FontFamily="RobotoBold"
+                                   FontSize="18"
+                                   TextColor="{StaticResource White}"/>
+                            <Label Text="Listening Time"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                    <!-- Songs Liked Card -->
+                    <Border Grid.Column="1"
+                            BackgroundColor="{StaticResource BackgroundSecondary}"
+                            StrokeThickness="1"
+                            Stroke="{StaticResource Primary}"
+                            Padding="20">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="15"/>
+                        </Border.StrokeShape>
+                        <VerticalStackLayout Spacing="8">
+                            <!-- Heart Icon -->
+                            <Path Data="M12.01 6.001 C6.5 1 1 8 5.782 13.001 L12.011 20 L18.241 13.001 C23 8 17.5 1 12.01 6.002 Z"
+                                  Stroke="{StaticResource Primary}"
+                                  StrokeThickness="2"
+                                  HorizontalOptions="Start"
+                                  WidthRequest="30"
+                                  HeightRequest="30"/>
+                            <Label x:Name="SongsLikedLabel"
+                                   Text="0"
+                                   FontFamily="RobotoBold"
+                                   FontSize="18"
+                                   TextColor="{StaticResource White}"/>
+                            <Label Text="Songs Liked"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"/>
+                        </VerticalStackLayout>
+                    </Border>
+                    
+                </Grid>
+                
+                <!-- Top Genres Section -->
+                <VerticalStackLayout Spacing="15" Margin="0,20,0,0">
+                    <Label Text="Top Genres"
+                           FontFamily="RobotoBold"
+                           FontSize="18"
+                           TextColor="{StaticResource Primary}"/>
+                    
+                    <!-- Genre Bar Chart -->
+                    <Grid x:Name="GenreChartContainer"
+                          HeightRequest="200"
+                          VerticalOptions="End">
+                        
+                        <HorizontalStackLayout x:Name="GenreBarsStack"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="End"
+                                               Spacing="20">
+                            <!-- Bars will be added dynamically -->
+                        </HorizontalStackLayout>
+                        
+                    </Grid>
+                    
+                    <!-- Empty State for Genres -->
+                    <Label x:Name="NoGenresLabel"
+                           Text="Like some songs to see your top genres!"
+                           FontFamily="RobotoMedium"
+                           FontSize="14"
+                           TextColor="{StaticResource Grey}"
+                           HorizontalOptions="Center"
+                           IsVisible="True"/>
+                    
+                </VerticalStackLayout>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <!-- Custom TabBar -->
+        <components:CustomTabBar Grid.Row="2" CurrentPage="StatsPage" />
         
     </Grid>
 

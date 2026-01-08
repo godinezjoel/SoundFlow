@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.Pages.FaqPage"
+             BackgroundColor="{StaticResource Background}">
+
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,20,20,10" ColumnDefinitions="Auto,*,Auto">
+            <!-- Back Button -->
+            <Border BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    WidthRequest="40"
+                    HeightRequest="40">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnBackClicked"/>
+                </Border.GestureRecognizers>
+                <Path Data="M19 12 H5 M12 19 L5 12 L12 5"
+                      Stroke="{StaticResource White}"
+                      StrokeThickness="2"
+                      StrokeLineCap="Round"
+                      StrokeLineJoin="Round"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      WidthRequest="24"
+                      HeightRequest="24"/>
+            </Border>
+            
+            <Label Grid.Column="1"
+                   Text="Tutorial / FAQ"
+                   FontFamily="RobotoBold"
+                   FontSize="24"
+                   TextColor="{StaticResource White}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"/>
+        </Grid>
+        
+        <!-- FAQ Content -->
+        <ScrollView Grid.Row="1" Padding="20,10">
+            <VerticalStackLayout Spacing="15">
+                
+                <!-- App Info Section -->
+                <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                        StrokeThickness="0"
+                        Padding="20"
+                        Margin="0,0,0,10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15"/>
+                    </Border.StrokeShape>
+                    <HorizontalStackLayout Spacing="15">
+                        <Image Source="appiconfg.svg"
+                               WidthRequest="50"
+                               HeightRequest="50"/>
+                        <VerticalStackLayout VerticalOptions="Center">
+                            <Label Text="SoundFlow"
+                                   FontFamily="RobotoBold"
+                                   FontSize="20"
+                                   TextColor="{StaticResource White}"/>
+                            <Label Text="Version 1.0.0"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"/>
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+                
+                <!-- FAQ Section Title -->
+                <Label Text="Frequently Asked Questions"
+                       FontFamily="RobotoBold"
+                       FontSize="18"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0,10,0,5"/>
+                
+                <!-- FAQ Items -->
+                <VerticalStackLayout x:Name="FaqContainer" Spacing="10">
+                    <!-- FAQ items will be added dynamically -->
+                </VerticalStackLayout>
+                
+                <!-- Impressum Section -->
+                <Label Text="About"
+                       FontFamily="RobotoBold"
+                       FontSize="18"
+                       TextColor="{StaticResource Primary}"
+                       Margin="0,20,0,5"/>
+                
+                <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                        StrokeThickness="0"
+                        Padding="20">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="15">
+                        <Label Text="SoundFlow is a music discovery app that helps you find new songs through a vertical scrolling feed. Discover, like, and collect your favorite tracks while tracking your listening habits."
+                               FontFamily="RobotoMedium"
+                               FontSize="14"
+                               TextColor="{StaticResource Grey}"
+                               LineHeight="1.5"/>
+                        
+                        <BoxView HeightRequest="1" 
+                                 BackgroundColor="{StaticResource Grey}" 
+                                 Opacity="0.3"/>
+                        
+                        <Label Text="Impressum"
+                               FontFamily="RobotoBold"
+                               FontSize="16"
+                               TextColor="{StaticResource White}"/>
+                        
+                        <VerticalStackLayout Spacing="5">
+                            <Label Text="SoundFlow App"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Grey}"/>
+                            <Label Text="Developer: SoundFlow Team"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Grey}"/>
+                            <Label Text="Contact: support@soundflow.app"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="14"
+                                   TextColor="{StaticResource Primary}"/>
+                            <Label Text="© 2026 SoundFlow. All rights reserved."
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"
+                                   Margin="0,10,0,0"/>
+                        </VerticalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+                
+                <!-- Bottom Padding -->
+                <BoxView HeightRequest="20"/>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+        
+    </Grid>
+
+</ContentPage>
+

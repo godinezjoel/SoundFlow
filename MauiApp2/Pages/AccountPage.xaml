@@ -5,17 +5,255 @@
              x:Class="MauiApp2.Pages.AccountPage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto">
         
-        <Label Grid.Row="0"
-               Text="Account Page"
-               FontFamily="RobotoMedium"
-               FontSize="32"
-               TextColor="{StaticResource White}"
-               VerticalOptions="Center"
-               HorizontalOptions="Center" />
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
+            <Label Text="Account"
+                   FontFamily="RobotoBold"
+                   FontSize="28"
+                   TextColor="{StaticResource White}"/>
+            
+            <!-- Edit Button -->
+            <Border Grid.Column="1"
+                    BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    VerticalOptions="Start">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnEditClicked"/>
+                </Border.GestureRecognizers>
+                <Path Data="M11 4 H4 A2 2 0 0 0 2 6 V20 A2 2 0 0 0 4 22 H18 A2 2 0 0 0 20 20 V13 M18.5 2.5 A2.121 2.121 0 0 1 21.5 5.5 L12 15 L8 16 L9 12 L18.5 2.5 Z"
+                      Stroke="{StaticResource White}"
+                      StrokeThickness="2"
+                      StrokeLineCap="Round"
+                      StrokeLineJoin="Round"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      WidthRequest="22"
+                      HeightRequest="22"/>
+            </Border>
+        </Grid>
         
-        <components:CustomTabBar Grid.Row="1" CurrentPage="AccountPage" />
+        <!-- Account Content -->
+        <ScrollView Grid.Row="1" Padding="20,10">
+            <VerticalStackLayout Spacing="25">
+                
+                <!-- Profile Section -->
+                <VerticalStackLayout HorizontalOptions="Center" Spacing="15">
+                    <!-- Profile Image with Edit Overlay -->
+                    <Grid HorizontalOptions="Center">
+                        <Border x:Name="ProfileImageBorder"
+                                BackgroundColor="{StaticResource Primary}"
+                                WidthRequest="100"
+                                HeightRequest="100"
+                                StrokeThickness="0"
+                                HorizontalOptions="Center">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="50"/>
+                            </Border.StrokeShape>
+                            <Grid>
+                                <!-- Default Icon (shown when no custom image) -->
+                                <Image x:Name="ProfileIconImage"
+                                       Source="appiconfg.svg"
+                                       WidthRequest="60"
+                                       HeightRequest="60"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"/>
+                                <!-- Custom Image (shown when user selected image) -->
+                                <Image x:Name="ProfileCustomImage"
+                                       WidthRequest="100"
+                                       HeightRequest="100"
+                                       Aspect="AspectFill"
+                                       HorizontalOptions="Center"
+                                       VerticalOptions="Center"
+                                       IsVisible="False"/>
+                            </Grid>
+                        </Border>
+                        
+                        <!-- Edit Icon Overlay (appears when in edit mode) -->
+                        <Border x:Name="ProfileEditOverlay"
+                                BackgroundColor="{StaticResource Primary}"
+                                WidthRequest="32"
+                                HeightRequest="32"
+                                StrokeThickness="2"
+                                Stroke="{StaticResource Background}"
+                                HorizontalOptions="End"
+                                VerticalOptions="End"
+                                Margin="0,0,0,0"
+                                IsVisible="False">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16"/>
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnProfileImageEditClicked"/>
+                            </Border.GestureRecognizers>
+                            <Path Data="M11 4 H4 A2 2 0 0 0 2 6 V20 A2 2 0 0 0 4 22 H18 A2 2 0 0 0 20 20 V13 M18.5 2.5 A2.121 2.121 0 0 1 21.5 5.5 L12 15 L8 16 L9 12 L18.5 2.5 Z"
+                                  Stroke="{StaticResource White}"
+                                  StrokeThickness="1.5"
+                                  StrokeLineCap="Round"
+                                  StrokeLineJoin="Round"
+                                  HorizontalOptions="Center"
+                                  VerticalOptions="Center"
+                                  WidthRequest="16"
+                                  HeightRequest="16"/>
+                        </Border>
+                    </Grid>
+                    
+                    <!-- Username -->
+                    <Label x:Name="UsernameLabel"
+                           Text="Username"
+                           FontFamily="RobotoBold"
+                           FontSize="20"
+                           TextColor="{StaticResource White}"
+                           HorizontalOptions="Center"/>
+                </VerticalStackLayout>
+                
+                <!-- Edit Profile Section (Hidden by default) -->
+                <Border x:Name="EditUsernameSection"
+                        BackgroundColor="{StaticResource BackgroundSecondary}"
+                        StrokeThickness="0"
+                        Padding="20"
+                        IsVisible="False">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="15"/>
+                    </Border.StrokeShape>
+                    <VerticalStackLayout Spacing="15">
+                        
+                        <!-- Edit Username Section -->
+                        <Label Text="Edit Username"
+                               FontFamily="RobotoBold"
+                               FontSize="16"
+                               TextColor="{StaticResource White}"/>
+                        
+                        <Entry x:Name="UsernameEntry"
+                               Placeholder="Enter username"
+                               PlaceholderColor="{StaticResource Grey}"
+                               TextColor="{StaticResource White}"
+                               BackgroundColor="{StaticResource Background}"
+                               FontFamily="RobotoMedium"
+                               TextChanged="OnUsernameTextChanged"/>
+                        
+                        <Label x:Name="UsernameErrorLabel"
+                               Text=""
+                               FontFamily="RobotoMedium"
+                               FontSize="12"
+                               TextColor="#FF6B6B"
+                               IsVisible="False"/>
+                        
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="End">
+                            <Button Text="Cancel"
+                                    BackgroundColor="Transparent"
+                                    TextColor="{StaticResource Grey}"
+                                    FontFamily="RobotoMedium"
+                                    Clicked="OnCancelEditClicked"/>
+                            <Button x:Name="SaveButton"
+                                    Text="Save"
+                                    BackgroundColor="{StaticResource Primary}"
+                                    TextColor="{StaticResource White}"
+                                    FontFamily="RobotoMedium"
+                                    Clicked="OnSaveUsernameClicked"
+                                    IsEnabled="False"/>
+                        </HorizontalStackLayout>
+                    </VerticalStackLayout>
+                </Border>
+                
+                <!-- Connect Music Apps Section -->
+                <VerticalStackLayout Spacing="15">
+                    <Label Text="Connect your Music Apps"
+                           FontFamily="RobotoMedium"
+                           FontSize="14"
+                           TextColor="{StaticResource Grey}"/>
+                    
+                    <!-- Spotify -->
+                    <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                            StrokeThickness="0"
+                            Padding="15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Spotify"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="16"
+                                   TextColor="{StaticResource White}"
+                                   VerticalOptions="Center"/>
+                            <Switch x:Name="SpotifySwitch"
+                                    Grid.Column="1"
+                                    OnColor="{StaticResource Primary}"
+                                    ThumbColor="{StaticResource White}"
+                                    Toggled="OnMusicServiceToggled"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- SoundCloud -->
+                    <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                            StrokeThickness="0"
+                            Padding="15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="SoundCloud"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="16"
+                                   TextColor="{StaticResource White}"
+                                   VerticalOptions="Center"/>
+                            <Switch x:Name="SoundCloudSwitch"
+                                    Grid.Column="1"
+                                    OnColor="{StaticResource Primary}"
+                                    ThumbColor="{StaticResource White}"
+                                    Toggled="OnMusicServiceToggled"/>
+                        </Grid>
+                    </Border>
+                    
+                    <!-- Apple Music -->
+                    <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                            StrokeThickness="0"
+                            Padding="15">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Label Text="Apple Music"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="16"
+                                   TextColor="{StaticResource White}"
+                                   VerticalOptions="Center"/>
+                            <Switch x:Name="AppleMusicSwitch"
+                                    Grid.Column="1"
+                                    OnColor="{StaticResource Primary}"
+                                    ThumbColor="{StaticResource White}"
+                                    Toggled="OnMusicServiceToggled"/>
+                        </Grid>
+                    </Border>
+                </VerticalStackLayout>
+                
+                <!-- Tutorial / FAQ Button -->
+                <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                        StrokeThickness="1"
+                        Stroke="{StaticResource Primary}"
+                        Padding="15"
+                        Margin="0,10">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="12"/>
+                    </Border.StrokeShape>
+                    <Border.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnFaqClicked"/>
+                    </Border.GestureRecognizers>
+                    <Label Text="Tutorial / FAQ"
+                           FontFamily="RobotoMedium"
+                           FontSize="16"
+                           TextColor="{StaticResource Primary}"
+                           HorizontalOptions="Center"/>
+                </Border>
+                
+            </VerticalStackLayout>
+        </ScrollView>
+        
+        <!-- Custom TabBar -->
+        <components:CustomTabBar Grid.Row="2" CurrentPage="AccountPage" />
         
     </Grid>
 

@@ -5,17 +5,178 @@
              x:Class="MauiApp2.Pages.LikedSongsPage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
         
-        <Label Grid.Row="0"
-               Text="Liked Songs Page"
-               FontFamily="RobotoMedium"
-               FontSize="32"
-               TextColor="{StaticResource White}"
-               VerticalOptions="Center"
-               HorizontalOptions="Center" />
+        <!-- Header -->
+        <Grid Grid.Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
+            <VerticalStackLayout>
+                <Label Text="Liked songs"
+                       FontFamily="RobotoBold"
+                       FontSize="28"
+                       TextColor="{StaticResource White}"/>
+                <Label x:Name="SongCountLabel"
+                       Text="0 Songs"
+                       FontFamily="RobotoMedium"
+                       FontSize="14"
+                       TextColor="{StaticResource Grey}"/>
+            </VerticalStackLayout>
+            
+            <!-- Search Icon -->
+            <Border Grid.Column="1"
+                    BackgroundColor="Transparent"
+                    StrokeThickness="0"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    VerticalOptions="Start">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnSearchClicked"/>
+                </Border.GestureRecognizers>
+                <Path Data="M21 21 L16.65 16.65 M19 11 A8 8 0 1 1 3 11 A8 8 0 0 1 19 11 Z"
+                      Stroke="{StaticResource White}"
+                      StrokeThickness="2"
+                      StrokeLineCap="Round"
+                      StrokeLineJoin="Round"
+                      HorizontalOptions="Center"
+                      VerticalOptions="Center"
+                      WidthRequest="24"
+                      HeightRequest="24"/>
+            </Border>
+        </Grid>
         
-        <components:CustomTabBar Grid.Row="1" CurrentPage="LikedSongsPage" />
+        <!-- Genre Filter -->
+        <Border Grid.Row="1"
+                BackgroundColor="{StaticResource BackgroundSecondary}"
+                StrokeThickness="1"
+                Stroke="{StaticResource Grey}"
+                Padding="12,6"
+                HorizontalOptions="Start"
+                Margin="20,5"
+                IsVisible="{Binding HasSongs}">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="12"/>
+            </Border.StrokeShape>
+            <Border.GestureRecognizers>
+                <TapGestureRecognizer Tapped="OnGenreFilterClicked"/>
+            </Border.GestureRecognizers>
+            <HorizontalStackLayout Spacing="8">
+                <Label x:Name="GenreFilterLabel"
+                       Text="Genre"
+                       FontFamily="RobotoMedium"
+                       FontSize="12"
+                       TextColor="{StaticResource Grey}"/>
+                <Label Text="▼" 
+                       TextColor="{StaticResource Primary}"
+                       FontSize="8"
+                       VerticalOptions="Center"/>
+            </HorizontalStackLayout>
+        </Border>
+        
+        <!-- Empty State -->
+        <VerticalStackLayout x:Name="EmptyState"
+                             Grid.Row="2"
+                             VerticalOptions="Center"
+                             HorizontalOptions="Center"
+                             Spacing="10"
+                             IsVisible="True">
+            <Label Text="No liked songs yet"
+                   FontFamily="RobotoBold"
+                   FontSize="18"
+                   TextColor="{StaticResource White}"
+                   HorizontalOptions="Center"/>
+            <Label Text="start discovering new music in the feed&#10;and like your favorite songs"
+                   FontFamily="RobotoMedium"
+                   FontSize="14"
+                   TextColor="{StaticResource Grey}"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Center"/>
+        </VerticalStackLayout>
+        
+        <!-- Liked Songs List -->
+        <CollectionView x:Name="LikedSongsCollection"
+                        Grid.Row="2"
+                        Margin="20,10"
+                        IsVisible="False">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+                            StrokeThickness="0"
+                            Margin="0,5"
+                            Padding="12">
+                        <Border.StrokeShape>
+                            <RoundRectangle CornerRadius="12"/>
+                        </Border.StrokeShape>
+                        <Grid ColumnDefinitions="50,*,Auto,Auto">
+                            
+                            <!-- Cover Image -->
+                            <Border BackgroundColor="{StaticResource Grey}"
+                                    StrokeThickness="0"
+                                    WidthRequest="50"
+                                    HeightRequest="50">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="8"/>
+                                </Border.StrokeShape>
+                                <Image Source="{Binding CoverImage}"
+                                       Aspect="AspectFill"/>
+                            </Border>
+                            
+                            <!-- Song Info -->
+                            <VerticalStackLayout Grid.Column="1" 
+                                                 Margin="12,0,0,0"
+                                                 VerticalOptions="Center">
+                                <Label Text="{Binding Title}"
+                                       FontFamily="RobotoBold"
+                                       FontSize="16"
+                                       TextColor="{StaticResource White}"/>
+                                <Label Text="{Binding Artist}"
+                                       FontFamily="RobotoMedium"
+                                       FontSize="13"
+                                       TextColor="{StaticResource Grey}"/>
+                            </VerticalStackLayout>
+                            
+                            <!-- Play Button -->
+                            <Border Grid.Column="2"
+                                    BackgroundColor="Transparent"
+                                    StrokeThickness="0"
+                                    WidthRequest="40"
+                                    HeightRequest="40">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnPlaySongClicked" CommandParameter="{Binding Id}"/>
+                                </Border.GestureRecognizers>
+                                <Path Data="M8 5 L19 12 L8 19 Z"
+                                      Fill="{StaticResource White}"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center"
+                                      WidthRequest="20"
+                                      HeightRequest="20"/>
+                            </Border>
+                            
+                            <!-- Like Button (filled) -->
+                            <Border Grid.Column="3"
+                                    BackgroundColor="Transparent"
+                                    StrokeThickness="0"
+                                    WidthRequest="40"
+                                    HeightRequest="40">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnUnlikeClicked" CommandParameter="{Binding Id}"/>
+                                </Border.GestureRecognizers>
+                                <Path Data="M12.01 6.001 C6.5 1 1 8 5.782 13.001 L12.011 20 L18.241 13.001 C23 8 17.5 1 12.01 6.002 Z"
+                                      Fill="{StaticResource Primary}"
+                                      Stroke="{StaticResource Primary}"
+                                      StrokeThickness="2"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center"
+                                      WidthRequest="22"
+                                      HeightRequest="22"/>
+                            </Border>
+                            
+                        </Grid>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+        
+        <!-- Custom TabBar -->
+        <components:CustomTabBar Grid.Row="3" CurrentPage="LikedSongsPage" />
         
     </Grid>
 

@@ -1,4 +1,4 @@
-﻿﻿using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 
 namespace MauiApp2;
 
@@ -12,6 +12,9 @@ public static class MauiProgram
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("Roboto-Medium.ttf", "RobotoMedium");
+                fonts.AddFont("Roboto-Bold.ttf", "RobotoBold");
+                fonts.AddFont("Roboto-MediumItalic.ttf", "RobotoMediumItalic");
+                fonts.AddFont("Roboto-BoldItalic.ttf", "RobotoBoldItalic");
             });
 
 #if DEBUG

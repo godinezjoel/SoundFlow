@@ -5,19 +5,187 @@
              x:Class="MauiApp2.Pages.HomePage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto">
         
-        <!-- Seiteninhalt -->
-        <Label Grid.Row="0"
-               Text="Home Page"
-               FontFamily="RobotoMedium"
-               FontSize="32"
-               TextColor="{StaticResource White}"
-               VerticalOptions="Center"
-               HorizontalOptions="Center" />
+        <!-- Header mit Logo und Genre Filter -->
+        <Grid Grid.Row="0" Padding="20,15" ColumnDefinitions="Auto,*,Auto">
+            <!-- Logo -->
+            <Image Source="appiconfg.svg" 
+                   WidthRequest="35" 
+                   HeightRequest="35"
+                   VerticalOptions="Center"/>
+            
+            <!-- Genre Filter Button -->
+            <Border Grid.Column="2"
+                    BackgroundColor="{StaticResource BackgroundSecondary}"
+                    StrokeThickness="1"
+                    Stroke="{StaticResource Primary}"
+                    Padding="12,8"
+                    VerticalOptions="Center">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="15"/>
+                </Border.StrokeShape>
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnFilterClicked"/>
+                </Border.GestureRecognizers>
+                <HorizontalStackLayout Spacing="8">
+                    <Label x:Name="FilterLabel" 
+                           Text="All Genres" 
+                           TextColor="{StaticResource White}"
+                           FontFamily="RobotoMedium"
+                           FontSize="14"
+                           VerticalOptions="Center"/>
+                    <Label Text="▼" 
+                           TextColor="{StaticResource Primary}"
+                           FontSize="10"
+                           VerticalOptions="Center"/>
+                </HorizontalStackLayout>
+            </Border>
+        </Grid>
         
-        <!-- Custom TabBar am unteren Rand -->
-        <components:CustomTabBar Grid.Row="1" CurrentPage="HomePage" />
+        <!-- Song Feed mit CarouselView -->
+        <CarouselView x:Name="SongCarousel"
+                      Grid.Row="1"
+                      Loop="False"
+                      CurrentItemChanged="OnCurrentSongChanged"
+                      VerticalOptions="Fill">
+            <CarouselView.ItemsLayout>
+                <LinearItemsLayout Orientation="Vertical" 
+                                   SnapPointsType="MandatorySingle" 
+                                   SnapPointsAlignment="Start"/>
+            </CarouselView.ItemsLayout>
+            <CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <Grid Padding="20" RowDefinitions="*,Auto,Auto,Auto,Auto,Auto">
+                        
+                        <!-- Cover Image -->
+                        <Border Grid.Row="0"
+                                BackgroundColor="{StaticResource BackgroundSecondary}"
+                                StrokeThickness="0"
+                                HorizontalOptions="Center"
+                                VerticalOptions="Center"
+                                Margin="0,20">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="20"/>
+                            </Border.StrokeShape>
+                            <Image Source="{Binding CoverImage}"
+                                   WidthRequest="280"
+                                   HeightRequest="280"
+                                   Aspect="AspectFill"/>
+                        </Border>
+                        
+                        <!-- Song Info -->
+                        <Grid Grid.Row="1" ColumnDefinitions="*,Auto" Margin="20,10">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding Title}"
+                                       FontFamily="RobotoBold"
+                                       FontSize="24"
+                                       TextColor="{StaticResource White}"/>
+                                <Label Text="{Binding Artist}"
+                                       FontFamily="RobotoMedium"
+                                       FontSize="16"
+                                       TextColor="{StaticResource Grey}"/>
+                            </VerticalStackLayout>
+                            
+                            <!-- Like Button -->
+                            <Border Grid.Column="1"
+                                    BackgroundColor="Transparent"
+                                    StrokeThickness="0"
+                                    WidthRequest="50"
+                                    HeightRequest="50">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnLikeClicked" CommandParameter="{Binding Id}"/>
+                                </Border.GestureRecognizers>
+                                <Path Data="M12.01 6.001 C6.5 1 1 8 5.782 13.001 L12.011 20 L18.241 13.001 C23 8 17.5 1 12.01 6.002 Z"
+                                      Stroke="{Binding IsLiked, Converter={StaticResource BoolToColorConverter}}"
+                                      Fill="{Binding IsLiked, Converter={StaticResource BoolToFillConverter}}"
+                                      StrokeThickness="2"
+                                      HorizontalOptions="Center"
+                                      VerticalOptions="Center"
+                                      WidthRequest="28"
+                                      HeightRequest="28"/>
+                            </Border>
+                        </Grid>
+                        
+                        <!-- Genre Badge -->
+                        <Border Grid.Row="2" 
+                                BackgroundColor="{StaticResource BackgroundSecondary}"
+                                StrokeThickness="1"
+                                Stroke="{StaticResource Grey}"
+                                Padding="12,6"
+                                HorizontalOptions="Start"
+                                Margin="20,5">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="12"/>
+                            </Border.StrokeShape>
+                            <Label Text="{Binding Genre}"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"/>
+                        </Border>
+                        
+                        <!-- Progress Bar -->
+                        <Grid Grid.Row="3" Margin="20,15" ColumnDefinitions="Auto,*,Auto">
+                            <Label x:Name="CurrentTimeLabel"
+                                   Text="0:00"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"/>
+                            <Slider Grid.Column="1"
+                                    x:Name="ProgressSlider"
+                                    Minimum="0"
+                                    Maximum="100"
+                                    Value="0"
+                                    MinimumTrackColor="{StaticResource Primary}"
+                                    MaximumTrackColor="{StaticResource Grey}"
+                                    ThumbColor="{StaticResource Primary}"
+                                    Margin="10,0"
+                                    ValueChanged="OnProgressChanged"
+                                    DragStarted="OnSliderDragStarted"
+                                    DragCompleted="OnSliderDragCompleted"/>
+                            <Label Grid.Column="2"
+                                   Text="{Binding Duration, StringFormat='{0:m\\:ss}'}"
+                                   FontFamily="RobotoMedium"
+                                   FontSize="12"
+                                   TextColor="{StaticResource Grey}"/>
+                        </Grid>
+                        
+                        <!-- Play/Pause Button -->
+                        <Border Grid.Row="4"
+                                BackgroundColor="{StaticResource Primary}"
+                                WidthRequest="60"
+                                HeightRequest="60"
+                                HorizontalOptions="Center"
+                                Margin="0,10">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="30"/>
+                            </Border.StrokeShape>
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnPlayPauseClicked"/>
+                            </Border.GestureRecognizers>
+                            <Label x:Name="PlayPauseIcon"
+                                   Text="▶"
+                                   FontSize="24"
+                                   TextColor="{StaticResource White}"
+                                   HorizontalOptions="Center"
+                                   VerticalOptions="Center"/>
+                        </Border>
+                        
+                        <!-- Scroll Indicator -->
+                        <Label Grid.Row="5"
+                               Text="↓"
+                               FontSize="20"
+                               TextColor="{StaticResource Grey}"
+                               HorizontalOptions="Center"
+                               Margin="0,10"/>
+                        
+                    </Grid>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+        
+        <!-- Custom TabBar -->
+        <components:CustomTabBar Grid.Row="2" CurrentPage="HomePage" />
         
     </Grid>
 
