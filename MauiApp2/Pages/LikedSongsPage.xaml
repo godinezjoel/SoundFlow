@@ -5,7 +5,7 @@
              x:Class="MauiApp2.Pages.LikedSongsPage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="Auto,Auto,*,Auto">
+    <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
         
         <!-- Header -->
         <Grid Grid.Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
@@ -142,12 +142,12 @@
                                 <Border.GestureRecognizers>
                                     <TapGestureRecognizer Tapped="OnPlaySongClicked" CommandParameter="{Binding Id}"/>
                                 </Border.GestureRecognizers>
-                                <Path Data="M8 5 L19 12 L8 19 Z"
+                                <Path Data="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z"
                                       Fill="{StaticResource White}"
                                       HorizontalOptions="Center"
                                       VerticalOptions="Center"
-                                      WidthRequest="20"
-                                      HeightRequest="20"/>
+                                      WidthRequest="24"
+                                      HeightRequest="24"/>
                             </Border>
                             
                             <!-- Like Button (filled) -->
@@ -175,8 +175,11 @@
             </CollectionView.ItemTemplate>
         </CollectionView>
         
+        <!-- Mini Player -->
+        <components:MiniPlayer Grid.Row="3" />
+        
         <!-- Custom TabBar -->
-        <components:CustomTabBar Grid.Row="3" CurrentPage="LikedSongsPage" />
+        <components:CustomTabBar Grid.Row="4" CurrentPage="LikedSongsPage" />
         
     </Grid>
 

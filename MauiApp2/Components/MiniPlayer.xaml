@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiApp2.Components.MiniPlayer"
+             x:Name="MiniPlayerView"
+             IsVisible="False">
+    
+    <Border BackgroundColor="{StaticResource BackgroundSecondary}"
+            StrokeThickness="0"
+            Padding="12,8"
+            Margin="10,0,10,5">
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="12"/>
+        </Border.StrokeShape>
+        
+        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+            
+            <!-- Song Info and Play/Pause Button -->
+            <Grid Grid.Row="0" Grid.Column="0" ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                <!-- Song Title and Artist -->
+                <VerticalStackLayout Spacing="2" VerticalOptions="Center">
+                    <Label x:Name="SongTitleLabel"
+                           Text="Song Title"
+                           FontFamily="RobotoMedium"
+                           FontSize="14"
+                           TextColor="{StaticResource White}"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1"/>
+                    <Label x:Name="ArtistLabel"
+                           Text="Artist"
+                           FontFamily="RobotoMedium"
+                           FontSize="11"
+                           TextColor="{StaticResource Grey}"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1"/>
+                </VerticalStackLayout>
+            </Grid>
+            
+            <!-- Play/Pause Button -->
+            <Border Grid.Row="0" Grid.Column="1"
+                    BackgroundColor="Transparent"
+                    WidthRequest="40"
+                    HeightRequest="40"
+                    StrokeThickness="0"
+                    HorizontalOptions="End"
+                    VerticalOptions="Center">
+                <Border.GestureRecognizers>
+                    <TapGestureRecognizer Tapped="OnPlayPauseClicked"/>
+                </Border.GestureRecognizers>
+                <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                    <!-- Play Icon -->
+                    <Path x:Name="PlayIcon"
+                          Data="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z"
+                          Fill="{StaticResource White}"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="32"
+                          HeightRequest="32"
+                          IsVisible="False"/>
+                    <!-- Pause Icon -->
+                    <Path x:Name="PauseIcon"
+                          Data="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z"
+                          Fill="{StaticResource White}"
+                          HorizontalOptions="Center"
+                          VerticalOptions="Center"
+                          WidthRequest="32"
+                          HeightRequest="32"
+                          IsVisible="True"/>
+                </Grid>
+            </Border>
+            
+            <!-- Progress Bar -->
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                  ColumnDefinitions="Auto,*,Auto" 
+                  Margin="0,8,0,0">
+                <Label x:Name="CurrentTimeLabel"
+                       Text="0:00"
+                       FontFamily="RobotoMedium"
+                       FontSize="10"
+                       TextColor="{StaticResource Grey}"
+                       VerticalOptions="Center"/>
+                <Slider x:Name="ProgressSlider"
+                        Grid.Column="1"
+                        Minimum="0"
+                        Maximum="100"
+                        Value="0"
+                        MinimumTrackColor="{StaticResource Primary}"
+                        MaximumTrackColor="{StaticResource Grey}"
+                        ThumbColor="{StaticResource Primary}"
+                        Margin="8,0"
+                        HeightRequest="20"
+                        ValueChanged="OnProgressChanged"
+                        DragStarted="OnSliderDragStarted"
+                        DragCompleted="OnSliderDragCompleted"/>
+                <Label x:Name="DurationLabel"
+                       Grid.Column="2"
+                       Text="0:00"
+                       FontFamily="RobotoMedium"
+                       FontSize="10"
+                       TextColor="{StaticResource Grey}"
+                       VerticalOptions="Center"/>
+            </Grid>
+            
+        </Grid>
+    </Border>
+    
+</ContentView>
+

@@ -1,12 +1,14 @@
-﻿using MauiApp2.Models;
+﻿﻿using MauiApp2.Models;
 using MauiApp2.Services;
 using System.Collections.ObjectModel;
+using Microsoft.Maui.Controls.Shapes;
 
 namespace MauiApp2.Pages;
 
 public partial class HomePage : ContentPage
 {
     private readonly MusicService _musicService = MusicService.Instance;
+    private readonly PlaybackService _playbackService = PlaybackService.Instance;
     private ObservableCollection<Song> _songs = new();
     private List<string> _selectedGenres = new();
     private Song? _currentSong;
@@ -19,13 +21,17 @@ public partial class HomePage : ContentPage
     // References to UI elements in the current carousel item
     private Slider? _currentSlider;
     private Label? _currentTimeLabel;
-    private Label? _currentPlayPauseIcon;
+    private Microsoft.Maui.Controls.Shapes.Path? _currentPlayIcon;
+    private Microsoft.Maui.Controls.Shapes.Path? _currentPauseIcon;
 
     public HomePage()
     {
         InitializeComponent();
         LoadSongs();
         SetupPlaybackTimer();
+        
+        // Initialize PlaybackService with dispatcher
+        _playbackService.Initialize(Dispatcher);
     }
 
     private void SetupPlaybackTimer()
@@ -101,22 +107,6 @@ public partial class HomePage : ContentPage
             // Ignore errors when UI elements are not found
         }
     }
-    
-    private void CacheCurrentItemUIElements()
-    {
-        try
-        {
-            // Find the current visible item's UI elements
-            // We use the event handlers to cache these when they're triggered
-            _currentSlider = null;
-            _currentTimeLabel = null;
-            _currentPlayPauseIcon = null;
-        }
-        catch
-        {
-            // Ignore
-        }
-    }
 
     private void LoadSongs()
     {
@@ -168,7 +158,8 @@ public partial class HomePage : ContentPage
         // Reset UI element references (they will be re-cached when user interacts)
         _currentSlider = null;
         _currentTimeLabel = null;
-        _currentPlayPauseIcon = null;
+        _currentPlayIcon = null;
+        _currentPauseIcon = null;
         
         // Track listening time for previous song
         if (e.PreviousItem is Song previousSong && _currentPosition > 0)
@@ -181,6 +172,74 @@ public partial class HomePage : ContentPage
         {
             _currentSong = newSong;
             _currentPosition = 0;
+        }
+        
+        // Cache UI elements from the new carousel item after a short delay
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            await Task.Delay(100); // Wait for visual tree to update
+            CacheCurrentCarouselItemUI();
+        });
+    }
+    
+    private void CacheCurrentCarouselItemUI()
+    {
+        try
+        {
+            // Find the current visible item's UI elements
+            // The CarouselView's currently displayed item should be in the visual tree
+            FindUIElementsInVisualTree(SongCarousel);
+        }
+        catch
+        {
+            // Ignore errors when UI elements are not found yet
+        }
+    }
+    
+    private void FindUIElementsInVisualTree(Element element)
+    {
+        if (_currentSlider != null && _currentPlayIcon != null) return; // Already found
+        
+        if (element is Slider slider && slider.Parent is Grid grid)
+        {
+            // Check if this slider belongs to the current visible item
+            _currentSlider = slider;
+            
+            // Find time label in same grid
+            foreach (var child in grid.Children)
+            {
+                if (child is Label label && Grid.GetColumn(label) == 0)
+                {
+                    _currentTimeLabel = label;
+                    break;
+                }
+            }
+        }
+        
+        if (element is Microsoft.Maui.Controls.Shapes.Path path)
+        {
+            // Identify play/pause icons by their data
+            var pathData = path.Data?.ToString() ?? "";
+            if (pathData.Contains("8.6 5.2") || pathData.Contains("M8.6"))
+            {
+                _currentPlayIcon = path;
+            }
+            else if (pathData.Contains("M8 5a2") || pathData.Contains("8 5a2"))
+            {
+                _currentPauseIcon = path;
+            }
+        }
+        
+        // Recurse through children
+        if (element is IVisualTreeElement visualTreeElement)
+        {
+            foreach (var child in visualTreeElement.GetVisualChildren())
+            {
+                if (child is Element childElement)
+                {
+                    FindUIElementsInVisualTree(childElement);
+                }
+            }
         }
     }
 
@@ -205,19 +264,29 @@ public partial class HomePage : ContentPage
 
     private void OnPlayPauseClicked(object? sender, TappedEventArgs e)
     {
-        // Cache the play/pause icon from the sender (Border contains the Label)
+        // Cache the play/pause icons from the sender (Border contains a Grid with Path icons)
         if (sender is Border border)
         {
-            // Find the Label inside the Border (Border has Content, not Children)
-            if (border.Content is Label label)
+            // Find the icons inside the Border's Grid
+            if (border.Content is Grid iconGrid)
             {
-                _currentPlayPauseIcon = label;
+                foreach (var child in iconGrid.Children)
+                {
+                    if (child is Microsoft.Maui.Controls.Shapes.Path path)
+                    {
+                        // Identify by visibility - PlayIcon is visible by default
+                        if (path.IsVisible)
+                            _currentPlayIcon = path;
+                        else
+                            _currentPauseIcon = path;
+                    }
+                }
             }
             
             // Also try to find slider and time label in the parent grid
             if (border.Parent is Grid parentGrid)
             {
-                FindUIElementsInGrid(parentGrid);
+                CacheUIElementsFromParent(parentGrid);
             }
         }
         
@@ -227,36 +296,75 @@ public partial class HomePage : ContentPage
         }
         else
         {
+            // Stop any song playing in MiniPlayer when starting playback on HomePage
+            _playbackService.ClearSong();
             StartPlayback();
         }
     }
     
-    private void FindUIElementsInGrid(Grid grid)
+    private void CacheUIElementsFromParent(Grid parentGrid)
     {
-        foreach (var child in grid.Children)
+        // Navigate up to the main item grid (the DataTemplate root)
+        // parentGrid is the Grid containing the Play/Pause button (Row 4)
+        // We need to go up to find the DataTemplate root Grid
+        var itemGrid = parentGrid.Parent?.Parent as Grid;
+        if (itemGrid == null)
         {
-            if (child is Grid innerGrid)
+            itemGrid = parentGrid.Parent as Grid;
+        }
+        if (itemGrid == null) return;
+        
+        // Search all children recursively for Slider and CurrentTimeLabel
+        FindUIElementsRecursive(itemGrid);
+    }
+    
+    private void FindUIElementsRecursive(Element element)
+    {
+        if (element is Slider slider)
+        {
+            _currentSlider = slider;
+            return;
+        }
+        
+        if (element is Grid grid)
+        {
+            // Check if this grid contains a Slider (progress bar grid)
+            bool hasSlider = false;
+            foreach (var child in grid.Children)
             {
-                // Check if this is the progress bar grid
-                foreach (var innerChild in innerGrid.Children)
+                if (child is Slider s)
                 {
-                    if (innerChild is Slider slider)
+                    _currentSlider = s;
+                    hasSlider = true;
+                }
+            }
+            
+            // If this grid has a slider, find the time label at column 0
+            if (hasSlider)
+            {
+                foreach (var child in grid.Children)
+                {
+                    if (child is Label label && Grid.GetColumn(label) == 0)
                     {
-                        _currentSlider = slider;
-                    }
-                    else if (innerChild is Label label && Grid.GetColumn(label) == 0)
-                    {
-                        // First label in the grid (current time)
-                        if (label.Text != null && label.Text.Contains(":") && label.Text.Length <= 5)
-                        {
-                            _currentTimeLabel = label;
-                        }
+                        _currentTimeLabel = label;
+                        break;
                     }
                 }
             }
+            
+            // Continue searching in children
+            foreach (var child in grid.Children)
+            {
+                if (child is Element e)
+                    FindUIElementsRecursive(e);
+            }
+        }
+        else if (element is Border border && border.Content is Element content)
+        {
+            FindUIElementsRecursive(content);
         }
     }
-
+    
     private void StartPlayback()
     {
         _isPlaying = true;
@@ -292,9 +400,10 @@ public partial class HomePage : ContentPage
 
     private void UpdatePlayPauseButton()
     {
-        if (_currentPlayPauseIcon != null)
+        if (_currentPlayIcon != null && _currentPauseIcon != null)
         {
-            _currentPlayPauseIcon.Text = _isPlaying ? "⏸" : "▶";
+            _currentPlayIcon.IsVisible = !_isPlaying;
+            _currentPauseIcon.IsVisible = _isPlaying;
         }
     }
 
@@ -310,14 +419,11 @@ public partial class HomePage : ContentPage
             {
                 foreach (var child in grid.Children)
                 {
-                    if (child is Label label && label.Text != null && 
-                        (label.Text.Contains(":") && label.Text.Length <= 5 && !label.Text.Contains("\\:")))
+                    if (child is Label label && Grid.GetColumn(label) == 0)
                     {
-                        // Check if it's the current time label (first one, column 0)
-                        if (Grid.GetColumn(label) == 0)
-                        {
-                            _currentTimeLabel = label;
-                        }
+                        // Current time label is at column 0
+                        _currentTimeLabel = label;
+                        break;
                     }
                 }
             }
@@ -341,10 +447,23 @@ public partial class HomePage : ContentPage
     {
         _isDraggingSlider = true;
         
-        // Cache slider reference
+        // Cache slider and time label reference
         if (sender is Slider slider)
         {
             _currentSlider = slider;
+            
+            // Find the time label in the same grid
+            if (slider.Parent is Grid grid)
+            {
+                foreach (var child in grid.Children)
+                {
+                    if (child is Label label && Grid.GetColumn(label) == 0)
+                    {
+                        _currentTimeLabel = label;
+                        break;
+                    }
+                }
+            }
         }
     }
 

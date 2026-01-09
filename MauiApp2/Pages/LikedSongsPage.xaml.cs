@@ -7,6 +7,7 @@ namespace MauiApp2.Pages;
 public partial class LikedSongsPage : ContentPage
 {
     private readonly MusicService _musicService = MusicService.Instance;
+    private readonly PlaybackService _playbackService = PlaybackService.Instance;
     private ObservableCollection<Song> _likedSongs = new();
     private string _selectedGenre = "All";
     public bool HasSongs => _likedSongs.Count > 0;
@@ -16,6 +17,9 @@ public partial class LikedSongsPage : ContentPage
         InitializeComponent();
         BindingContext = this;
         _musicService.LikedSongsChanged += OnLikedSongsChanged;
+        
+        // Initialize PlaybackService with dispatcher
+        _playbackService.Initialize(Dispatcher);
     }
 
     private void OnLikedSongsChanged(object? sender, EventArgs e)
@@ -94,12 +98,11 @@ public partial class LikedSongsPage : ContentPage
     {
         if (e.Parameter is string songId)
         {
-            // Show that song is playing (simulated)
             var song = _likedSongs.FirstOrDefault(s => s.Id == songId);
             if (song != null)
             {
-                DisplayAlert("Now Playing", $"{song.Title} by {song.Artist}", "OK");
-                _musicService.AddListeningSession(songId, song.Duration);
+                // Play song using PlaybackService - will show in MiniPlayer
+                _playbackService.PlaySong(song);
             }
         }
     }

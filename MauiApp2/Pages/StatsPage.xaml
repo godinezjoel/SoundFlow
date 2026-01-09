@@ -5,7 +5,7 @@
              x:Class="MauiApp2.Pages.StatsPage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
         
         <!-- Header -->
         <Label Grid.Row="0"
@@ -133,8 +133,11 @@
             </VerticalStackLayout>
         </ScrollView>
         
+        <!-- Mini Player -->
+        <components:MiniPlayer Grid.Row="2" />
+        
         <!-- Custom TabBar -->
-        <components:CustomTabBar Grid.Row="2" CurrentPage="StatsPage" />
+        <components:CustomTabBar Grid.Row="3" CurrentPage="StatsPage" />
         
     </Grid>
 

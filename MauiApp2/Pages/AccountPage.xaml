@@ -5,7 +5,7 @@
              x:Class="MauiApp2.Pages.AccountPage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
         
         <!-- Header -->
         <Grid Grid.Row="0" Padding="20,20,20,10" ColumnDefinitions="*,Auto">
@@ -252,8 +252,11 @@
             </VerticalStackLayout>
         </ScrollView>
         
+        <!-- Mini Player -->
+        <components:MiniPlayer Grid.Row="2" />
+        
         <!-- Custom TabBar -->
-        <components:CustomTabBar Grid.Row="2" CurrentPage="AccountPage" />
+        <components:CustomTabBar Grid.Row="3" CurrentPage="AccountPage" />
         
     </Grid>
 

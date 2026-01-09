@@ -1,4 +1,5 @@
 ﻿using MauiApp2.Models;
+using System.Text.Json;
 
 namespace MauiApp2.Services;
 
@@ -10,6 +11,7 @@ public class MusicService
     private readonly List<Song> _allSongs;
     private readonly List<ListeningSession> _listeningSessions = new();
     private UserProfile _userProfile = new();
+    private TimeSpan _totalListeningTime = TimeSpan.Zero;
 
     public event EventHandler? LikedSongsChanged;
     public event EventHandler? StatsChanged;
@@ -19,6 +21,8 @@ public class MusicService
     {
         _allSongs = GenerateSampleSongs();
         LoadUserProfile();
+        LoadLikedSongs();
+        LoadStats();
     }
 
     private void LoadUserProfile()
@@ -50,6 +54,135 @@ public class MusicService
         Preferences.Set("ProfileImagePath", _userProfile.ProfileImagePath ?? string.Empty);
         Preferences.Set("ProfileColor", _userProfile.ProfileColor ?? string.Empty);
         Preferences.Set("ProfileImageType", (int)_userProfile.ImageType);
+    }
+    
+    private void LoadLikedSongs()
+    {
+        try
+        {
+            var likedSongIds = Preferences.Get("LikedSongIds", string.Empty);
+            if (!string.IsNullOrEmpty(likedSongIds))
+            {
+                var ids = likedSongIds.Split(',', StringSplitOptions.RemoveEmptyEntries);
+                foreach (var id in ids)
+                {
+                    var song = _allSongs.FirstOrDefault(s => s.Id == id);
+                    if (song != null)
+                    {
+                        song.IsLiked = true;
+                        // Try to load LikedAt time
+                        var likedAtTicks = Preferences.Get($"LikedAt_{id}", 0L);
+                        if (likedAtTicks > 0)
+                        {
+                            song.LikedAt = new DateTime(likedAtTicks);
+                        }
+                        else
+                        {
+                            song.LikedAt = DateTime.Now;
+                        }
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Ignore errors loading liked songs
+        }
+    }
+    
+    private void SaveLikedSongs()
+    {
+        try
+        {
+            var likedSongs = _allSongs.Where(s => s.IsLiked).ToList();
+            var likedSongIds = string.Join(",", likedSongs.Select(s => s.Id));
+            Preferences.Set("LikedSongIds", likedSongIds);
+            
+            // Save LikedAt times
+            foreach (var song in likedSongs)
+            {
+                if (song.LikedAt.HasValue)
+                {
+                    Preferences.Set($"LikedAt_{song.Id}", song.LikedAt.Value.Ticks);
+                }
+            }
+        }
+        catch
+        {
+            // Ignore errors saving liked songs
+        }
+    }
+    
+    private void LoadStats()
+    {
+        try
+        {
+            // Load total listening time
+            var totalTicks = Preferences.Get("TotalListeningTimeTicks", 0L);
+            _totalListeningTime = TimeSpan.FromTicks(totalTicks);
+            
+            // Load listening sessions (only recent ones to save space)
+            var sessionsJson = Preferences.Get("ListeningSessions", string.Empty);
+            if (!string.IsNullOrEmpty(sessionsJson))
+            {
+                var sessions = JsonSerializer.Deserialize<List<ListeningSessionData>>(sessionsJson);
+                if (sessions != null)
+                {
+                    foreach (var sessionData in sessions)
+                    {
+                        _listeningSessions.Add(new ListeningSession
+                        {
+                            SongId = sessionData.SongId,
+                            Genre = sessionData.Genre,
+                            Duration = TimeSpan.FromTicks(sessionData.DurationTicks),
+                            Timestamp = new DateTime(sessionData.TimestampTicks)
+                        });
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Ignore errors loading stats
+        }
+    }
+    
+    private void SaveStats()
+    {
+        try
+        {
+            // Save total listening time
+            Preferences.Set("TotalListeningTimeTicks", _totalListeningTime.Ticks);
+            
+            // Save recent listening sessions (last 100 to save space)
+            var recentSessions = _listeningSessions
+                .OrderByDescending(s => s.Timestamp)
+                .Take(100)
+                .Select(s => new ListeningSessionData
+                {
+                    SongId = s.SongId,
+                    Genre = s.Genre,
+                    DurationTicks = s.Duration.Ticks,
+                    TimestampTicks = s.Timestamp.Ticks
+                })
+                .ToList();
+            
+            var sessionsJson = JsonSerializer.Serialize(recentSessions);
+            Preferences.Set("ListeningSessions", sessionsJson);
+        }
+        catch
+        {
+            // Ignore errors saving stats
+        }
+    }
+    
+    // Helper class for JSON serialization
+    private class ListeningSessionData
+    {
+        public string SongId { get; set; } = "";
+        public string Genre { get; set; } = "";
+        public long DurationTicks { get; set; }
+        public long TimestampTicks { get; set; }
     }
 
     private List<Song> GenerateSampleSongs()
@@ -179,6 +312,7 @@ public class MusicService
         {
             song.IsLiked = !song.IsLiked;
             song.LikedAt = song.IsLiked ? DateTime.Now : null;
+            SaveLikedSongs();
             LikedSongsChanged?.Invoke(this, EventArgs.Empty);
             StatsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -191,6 +325,7 @@ public class MusicService
         {
             song.IsLiked = liked;
             song.LikedAt = liked ? DateTime.Now : null;
+            SaveLikedSongs();
             LikedSongsChanged?.Invoke(this, EventArgs.Empty);
             StatsChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -208,6 +343,12 @@ public class MusicService
                 Duration = duration,
                 Timestamp = DateTime.Now
             });
+            
+            // Update total listening time
+            _totalListeningTime = _totalListeningTime.Add(duration);
+            
+            // Save stats
+            SaveStats();
             StatsChanged?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -225,7 +366,7 @@ public class MusicService
 
         return new StatsData
         {
-            TotalListeningTime = TimeSpan.FromTicks(_listeningSessions.Sum(s => s.Duration.Ticks)),
+            TotalListeningTime = _totalListeningTime,
             TotalLikedSongs = likedSongs.Count,
             TopGenres = genreStats
         };

@@ -5,7 +5,7 @@
              x:Class="MauiApp2.Pages.HomePage"
              BackgroundColor="{StaticResource Background}">
 
-    <Grid RowDefinitions="Auto,*,Auto">
+    <Grid RowDefinitions="Auto,*,Auto,Auto">
         
         <!-- Header mit Logo und Genre Filter -->
         <Grid Grid.Row="0" Padding="20,15" ColumnDefinitions="Auto,*,Auto">
@@ -151,25 +151,40 @@
                         </Grid>
                         
                         <!-- Play/Pause Button -->
-                        <Border Grid.Row="4"
-                                BackgroundColor="{StaticResource Primary}"
-                                WidthRequest="60"
-                                HeightRequest="60"
-                                HorizontalOptions="Center"
-                                Margin="0,10">
-                            <Border.StrokeShape>
-                                <RoundRectangle CornerRadius="30"/>
-                            </Border.StrokeShape>
-                            <Border.GestureRecognizers>
-                                <TapGestureRecognizer Tapped="OnPlayPauseClicked"/>
-                            </Border.GestureRecognizers>
-                            <Label x:Name="PlayPauseIcon"
-                                   Text="▶"
-                                   FontSize="24"
-                                   TextColor="{StaticResource White}"
-                                   HorizontalOptions="Center"
-                                   VerticalOptions="Center"/>
-                        </Border>
+                        <Grid Grid.Row="4" 
+                              HorizontalOptions="Fill"
+                              Margin="0,10">
+                            <Border BackgroundColor="Transparent"
+                                    WidthRequest="64"
+                                    HeightRequest="64"
+                                    StrokeThickness="0"
+                                    HorizontalOptions="Center"
+                                    VerticalOptions="Center">
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Tapped="OnPlayPauseClicked"/>
+                                </Border.GestureRecognizers>
+                                <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                                    <!-- Play Icon -->
+                                    <Path x:Name="PlayIcon"
+                                          Data="M8.6 5.2A1 1 0 0 0 7 6v12a1 1 0 0 0 1.6.8l8-6a1 1 0 0 0 0-1.6l-8-6Z"
+                                          Fill="{StaticResource White}"
+                                          HorizontalOptions="Center"
+                                          VerticalOptions="Center"
+                                          WidthRequest="48"
+                                          HeightRequest="48"
+                                          IsVisible="True"/>
+                                    <!-- Pause Icon -->
+                                    <Path x:Name="PauseIcon"
+                                          Data="M8 5a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H8Zm7 0a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-1Z"
+                                          Fill="{StaticResource White}"
+                                          HorizontalOptions="Center"
+                                          VerticalOptions="Center"
+                                          WidthRequest="48"
+                                          HeightRequest="48"
+                                          IsVisible="False"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
                         
                         <!-- Scroll Indicator -->
                         <Label Grid.Row="5"
@@ -184,8 +199,11 @@
             </CarouselView.ItemTemplate>
         </CarouselView>
         
+        <!-- Mini Player -->
+        <components:MiniPlayer Grid.Row="2" />
+        
         <!-- Custom TabBar -->
-        <components:CustomTabBar Grid.Row="2" CurrentPage="HomePage" />
+        <components:CustomTabBar Grid.Row="3" CurrentPage="HomePage" />
         
     </Grid>
 
